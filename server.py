@@ -25,7 +25,7 @@ from subscription import extract_tier_from_spec, get_tier_tag
 
 def load_openapi_spec() -> dict:
     """Load the OpenAPI spec from the local YAML file."""
-    spec_path = Path(__file__).parent / "openapiv3.yaml"
+    spec_path = Path(__file__).parent / "openapiv3_updated.yaml"
     with open(spec_path) as f:
         return yaml.safe_load(f)
 
@@ -94,6 +94,14 @@ def create_mcp_server(
                 modified = True
             # If both provided, keep as-is (allows multi-day queries)
             
+            # Ensure format is set to json_new for row-oriented JSON
+            if "format" not in params:
+                params["format"] = "json_new"
+                modified = True
+            elif params.get("format") == "json":
+                params["format"] = "json_new"
+                modified = True
+            
             # Rebuild URL with modified params
             if modified:
                 new_query = urlencode(params)
@@ -108,7 +116,27 @@ def create_mcp_server(
                     content=request.content,
                 )
             
-            return await self._transport.handle_async_request(request)
+            response = await self._transport.handle_async_request(request)
+            
+            # Unwrap response if it's wrapped in a "response" field
+            content_type = response.headers.get("content-type", "")
+            if "json" in content_type:
+                import json
+                try:
+                    body = await response.aread()
+                    data = json.loads(body)
+                    if isinstance(data, dict) and "response" in data and len(data) == 1:
+                        # Unwrap the response field
+                        new_body = json.dumps(data["response"]).encode()
+                        return httpx.Response(
+                            status_code=response.status_code,
+                            headers=response.headers,
+                            content=new_body,
+                        )
+                except Exception:
+                    pass
+            
+            return response
     
     client._transport = DateTransformTransport(original_transport)
 
