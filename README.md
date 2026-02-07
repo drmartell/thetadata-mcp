@@ -76,14 +76,6 @@ Add the following to your MCP client config, replacing `/path/to/thetadata-mcp` 
 }
 ```
 
-Config file locations by client:
-
-| Client | Config File |
-|--------|-------------|
-| Claude Desktop | `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) |
-| Windsurf | `~/.codeium/windsurf/mcp_config.json` |
-| Claude Code | `~/.claude.json` or project `.mcp.json` |
-
 ## Available Tools
 
 The server exposes all Theta Data v3 API endpoints as MCP tools, including:
