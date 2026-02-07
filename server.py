@@ -14,9 +14,9 @@ import httpx
 import yaml
 from fastmcp import FastMCP
 from fastmcp.server.openapi import (
-    OpenAPITool,
     OpenAPIResource,
     OpenAPIResourceTemplate,
+    OpenAPITool,
 )
 from fastmcp.server.openapi.routing import HTTPRoute
 
@@ -26,7 +26,7 @@ from subscription import extract_tier_from_spec, get_tier_tag
 def load_openapi_spec() -> dict:
     """Load the OpenAPI spec from the local YAML file."""
     spec_path = Path(__file__).parent / "openapiv3.yaml"
-    with open(spec_path, "r") as f:
+    with open(spec_path) as f:
         return yaml.safe_load(f)
 
 
@@ -63,7 +63,7 @@ def create_mcp_server(
         route: HTTPRoute,
         component: OpenAPITool | OpenAPIResource | OpenAPIResourceTemplate,
     ) -> None:
-        """Add subscription tier tags to MCP components."""
+        """Add subscription tier tags to MCP components and override default format."""
         tier = extract_tier_from_spec(openapi_spec, route.path)
         tag = get_tier_tag(tier)
         component.tags.add(tag)
@@ -71,6 +71,23 @@ def create_mcp_server(
         # Also append tier info to description for visibility
         if tier:
             component.description = f"[{tier.upper()}] {component.description}"
+
+        # Override default format from 'csv' to 'json' for better AI compatibility
+        if isinstance(component, OpenAPITool) and component.parameters:
+            # Handle both dict and Pydantic model structures
+            params = component.parameters
+            if isinstance(params, dict):
+                # Parameters is a dict
+                if "properties" in params and "format" in params["properties"]:
+                    format_prop = params["properties"]["format"]
+                    if isinstance(format_prop, dict) and format_prop.get("default") == "csv":
+                        format_prop["default"] = "json"
+            elif hasattr(params, "properties"):
+                # Parameters is a Pydantic model-like object
+                for param_name, param_info in params.properties.items():
+                    if param_name == "format" and hasattr(param_info, "default"):
+                        if param_info.default == "csv":
+                            param_info.default = "json"
 
     # Create the MCP server from the OpenAPI spec
     mcp = FastMCP.from_openapi(
