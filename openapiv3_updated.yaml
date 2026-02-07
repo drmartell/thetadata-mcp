@@ -491,8 +491,8 @@ paths:
           description: Click to open in browser (HTML)
       parameters:
         - $ref: "#/components/parameters/single_symbol"
-        - $ref: "#/components/parameters/start_date"
-        - $ref: "#/components/parameters/end_date"
+        - $ref: "#/components/parameters/opt_start_date"
+        - $ref: "#/components/parameters/opt_end_date"
         - $ref: "#/components/parameters/format"
       responses:
         '200':
@@ -1050,8 +1050,8 @@ paths:
         description: Click to open in browser (HTML)
       parameters:
         - $ref: "#/components/parameters/single_symbol"
-        - $ref: "#/components/parameters/start_date"
-        - $ref: "#/components/parameters/end_date"
+        - $ref: "#/components/parameters/opt_start_date"
+        - $ref: "#/components/parameters/opt_end_date"
         - $ref: "#/components/parameters/time_of_day"
         - $ref: "#/components/parameters/venue"
         - $ref: "#/components/parameters/format"
@@ -1141,8 +1141,8 @@ paths:
           description: Click to open in browser (HTML)
       parameters:
         - $ref: "#/components/parameters/single_symbol"
-        - $ref: "#/components/parameters/start_date"
-        - $ref: "#/components/parameters/end_date"
+        - $ref: "#/components/parameters/opt_start_date"
+        - $ref: "#/components/parameters/opt_end_date"
         - $ref: "#/components/parameters/time_of_day"
         - $ref: "#/components/parameters/venue"
         - $ref: "#/components/parameters/format"
@@ -2771,8 +2771,8 @@ paths:
         - url: http://127.0.0.1:25503/v3/option/history/eod?symbol=AAPL&expiration=*&start_date=20241104&end_date=20241104&format=html
           description: Click to open in browser (HTML)
       parameters:
-        - $ref: "#/components/parameters/start_date"
-        - $ref: "#/components/parameters/end_date"
+        - $ref: "#/components/parameters/opt_start_date"
+        - $ref: "#/components/parameters/opt_end_date"
         - $ref: "#/components/parameters/single_symbol"
         - $ref: "#/components/parameters/expiration"
         - $ref: "#/components/parameters/strike"
@@ -3516,8 +3516,8 @@ paths:
         - $ref: "#/components/parameters/expiration"
         - $ref: "#/components/parameters/strike"
         - $ref: "#/components/parameters/right"
-        - $ref: "#/components/parameters/start_date"
-        - $ref: "#/components/parameters/end_date"
+        - $ref: "#/components/parameters/opt_start_date"
+        - $ref: "#/components/parameters/opt_end_date"
         - $ref: "#/components/parameters/annual_dividend"
         - $ref: "#/components/parameters/rate_type"
         - $ref: "#/components/parameters/rate_value"
@@ -5333,8 +5333,8 @@ paths:
           description: Click to open in browser (HTML)
       parameters:
         - $ref: "#/components/parameters/single_symbol"
-        - $ref: "#/components/parameters/start_date"
-        - $ref: "#/components/parameters/end_date"
+        - $ref: "#/components/parameters/opt_start_date"
+        - $ref: "#/components/parameters/opt_end_date"
         - $ref: "#/components/parameters/time_of_day"
         - $ref: "#/components/parameters/expiration"
         - $ref: "#/components/parameters/strike"
@@ -5440,8 +5440,8 @@ paths:
           description: Click to open in browser (HTML)
       parameters:
         - $ref: "#/components/parameters/single_symbol"
-        - $ref: "#/components/parameters/start_date"
-        - $ref: "#/components/parameters/end_date"
+        - $ref: "#/components/parameters/opt_start_date"
+        - $ref: "#/components/parameters/opt_end_date"
         - $ref: "#/components/parameters/time_of_day"
         - $ref: "#/components/parameters/expiration"
         - $ref: "#/components/parameters/strike"
@@ -5839,8 +5839,8 @@ paths:
           description: Click to open in browser (HTML)
       parameters:
         - $ref: "#/components/parameters/single_symbol"
-        - $ref: "#/components/parameters/start_date"
-        - $ref: "#/components/parameters/end_date"
+        - $ref: "#/components/parameters/opt_start_date"
+        - $ref: "#/components/parameters/opt_end_date"
         - $ref: "#/components/parameters/format"
       responses:
         '200':
@@ -5954,8 +5954,8 @@ paths:
           description: Click to open in browser (HTML)
       parameters:
         - $ref: "#/components/parameters/single_symbol"
-        - $ref: "#/components/parameters/start_date"
-        - $ref: "#/components/parameters/end_date"
+        - $ref: "#/components/parameters/opt_start_date"
+        - $ref: "#/components/parameters/opt_end_date"
         - $ref: "#/components/parameters/interval"
         - $ref: "#/components/parameters/start_time"
         - $ref: "#/components/parameters/end_time"
@@ -6121,8 +6121,8 @@ paths:
           description: Click to open in browser (HTML)
       parameters:
         - $ref: "#/components/parameters/single_symbol"
-        - $ref: "#/components/parameters/start_date"
-        - $ref: "#/components/parameters/end_date"
+        - $ref: "#/components/parameters/opt_start_date"
+        - $ref: "#/components/parameters/opt_end_date"
         - $ref: "#/components/parameters/time_of_day"
         - $ref: "#/components/parameters/format"
       responses:
