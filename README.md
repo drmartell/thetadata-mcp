@@ -6,8 +6,6 @@ A local MCP (Model Context Protocol) wrapper for the Theta Data API, providing A
 
 This MCP server is generated from the Theta Data OpenAPI specification using [FastMCP](https://github.com/jlowin/fastmcp). It exposes API endpoints as MCP tools, allowing AI assistants to query market data directly.
 
-The official OpenAPI specification is available at: https://docs.thetadata.us/openapiv3.yaml
-
 ### Supported Data Types
 
 - **Stocks**: Symbols, EOD data, OHLC, trades, quotes, snapshots
@@ -21,7 +19,6 @@ The official OpenAPI specification is available at: https://docs.thetadata.us/op
 2. [uv](https://github.com/astral-sh/uv) for package management
 3. Theta Data terminal running locally (default: `http://127.0.0.1:25503`)
 4. A Theta Data subscription ([subscribe here](https://www.thetadata.net/subscribe.html))
-5. The OpenAPI spec file `openapiv3.yaml` (download from https://docs.thetadata.us/openapiv3.yaml)
 
 ## Installation
 
@@ -149,7 +146,7 @@ uv run python generate_endpoint_docs.py
 
 ### Regenerating Endpoint Documentation
 
-The `generate_endpoint_docs.py` script reads the `x-min-subscription` field from `openapiv3.yaml` and regenerates the markdown files in `endpoints_by_subscription/`. Each tier file shows all endpoints available at that subscription level and below (cumulative):
+The `generate_endpoint_docs.py` script reads the `x-min-subscription` field from `openapiv3_updated.yaml` and regenerates the markdown files in `endpoints_by_subscription/`. Each tier file shows all endpoints available at that subscription level and below (cumulative):
 
 - `endpoints_free.md` - Free tier endpoints
 - `endpoints_value.md` - Free + Value tier endpoints

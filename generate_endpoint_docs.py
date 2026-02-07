@@ -149,8 +149,8 @@ def main():
     parser.add_argument(
         "--spec",
         type=Path,
-        default=Path("openapiv3.yaml"),
-        help="Path to OpenAPI spec file (default: openapiv3.yaml)",
+        default=Path("openapiv3_updated.yaml"),
+        help="Path to OpenAPI spec file (default: openapiv3_updated.yaml)",
     )
     parser.add_argument(
         "--output-dir",
