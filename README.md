@@ -125,6 +125,19 @@ Once connected to an MCP client, you can ask:
 
 ## Development
 
+### Pre-commit Hooks
+
+This project uses [pre-commit](https://pre-commit.com/) to run `ruff` linting and formatting automatically on every commit.
+
+**Setup (one-time per clone):**
+```bash
+uv run pre-commit install
+```
+
+The hook will now automatically check and fix code formatting when you commit changes.
+
+### Manual Development Commands
+
 ```bash
 # Run linting with uv
 uv run ruff check .
