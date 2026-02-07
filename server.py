@@ -46,10 +46,7 @@ def create_mcp_server(
         A configured FastMCP server instance.
     """
     # Load configuration from environment or parameters
-    base_url = base_url or os.getenv(
-        "THETADATA_BASE_URL",
-        "http://127.0.0.1:25503/v3"
-    )
+    base_url = base_url or os.getenv("THETADATA_BASE_URL", "http://127.0.0.1:25503/v3")
     timeout = timeout or float(os.getenv("THETADATA_TIMEOUT", "30.0"))
 
     # Create HTTP client for the Theta Data API
@@ -88,9 +85,7 @@ def create_mcp_server(
 
 def main():
     """Run the Theta Data MCP server."""
-    parser = argparse.ArgumentParser(
-        description="Theta Data MCP Server"
-    )
+    parser = argparse.ArgumentParser(description="Theta Data MCP Server")
     parser.add_argument(
         "--base-url",
         help="Base URL for Theta Data API (default: http://127.0.0.1:25503/v3)",

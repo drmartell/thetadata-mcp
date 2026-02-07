@@ -17,7 +17,7 @@ def extract_tier_from_spec(openapi_spec: dict, path: str) -> Optional[str]:
         The minimum tier name (free, value, standard, professional) or None.
     """
     paths = openapi_spec.get("paths", {})
-    
+
     # Try exact match first
     if path in paths:
         path_item = paths[path]
@@ -30,7 +30,7 @@ def extract_tier_from_spec(openapi_spec: dict, path: str) -> Optional[str]:
                 operation = path_item[method]
                 if "x-min-subscription" in operation:
                     return operation["x-min-subscription"]
-    
+
     return None
 
 

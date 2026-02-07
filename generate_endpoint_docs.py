@@ -49,34 +49,40 @@ def extract_endpoints_by_tier(openapi_spec: dict) -> dict:
                     op_tier = operation.get("x-min-subscription", tier)
                     summary = operation.get("summary", "")
                     description = operation.get("description", "").strip()
-                    
+
                     # Use first line of description if no summary
                     display_name = summary
                     if not display_name and description:
                         display_name = description.split("\n")[0][:80]
-                    
-                    operations.append({
-                        "method": method.upper(),
-                        "tier": op_tier,
-                        "summary": display_name,
-                    })
+
+                    operations.append(
+                        {
+                            "method": method.upper(),
+                            "tier": op_tier,
+                            "summary": display_name,
+                        }
+                    )
 
         # If no operations found, try to use path-level tier
         if not operations and tier:
-            operations.append({
-                "method": "GET",  # Assume GET for path-level only
-                "tier": tier,
-                "summary": "",
-            })
+            operations.append(
+                {
+                    "method": "GET",  # Assume GET for path-level only
+                    "tier": tier,
+                    "summary": "",
+                }
+            )
 
         # Group by tier
         for op in operations:
             if op["tier"]:
-                tiers[op["tier"]].append({
-                    "path": path,
-                    "method": op["method"],
-                    "summary": op["summary"],
-                })
+                tiers[op["tier"]].append(
+                    {
+                        "path": path,
+                        "method": op["method"],
+                        "summary": op["summary"],
+                    }
+                )
 
     return dict(tiers)
 
@@ -112,21 +118,20 @@ def generate_markdown(tier: str, endpoints: list) -> str:
     for category in category_order:
         if category not in categories:
             continue
-        lines.extend([
-            f"#### {category} Endpoints",
-            "",
-        ])
+        lines.extend(
+            [
+                f"#### {category} Endpoints",
+                "",
+            ]
+        )
 
         # Sort endpoints within category
-        category_endpoints = sorted(
-            categories[category],
-            key=lambda x: x["path"]
-        )
+        category_endpoints = sorted(categories[category], key=lambda x: x["path"])
 
         for endpoint in category_endpoints:
             path = endpoint["path"]
             summary = endpoint["summary"]
-            
+
             if summary:
                 lines.append(f"- `{path}` - {summary}")
             else:
