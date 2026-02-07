@@ -18,7 +18,7 @@ This MCP server is generated from the Theta Data OpenAPI specification using [Fa
 1. Python 3.10+
 2. [uv](https://github.com/astral-sh/uv) for package management
 3. Theta Data terminal running locally (default: `http://127.0.0.1:25503`)
-4. A Theta Data subscription ([subscribe here](https://www.thetadata.net/subscribe.html))
+4. A Theta Data subscription ([subscribe here](https://www.thetadata.net/))
 
 ## Installation
 
