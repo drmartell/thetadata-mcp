@@ -4,7 +4,7 @@ A local MCP (Model Context Protocol) wrapper for the Theta Data API, providing A
 
 ## Overview
 
-This MCP server is generated from the Theta Data OpenAPI specification using [FastMCP](https://github.com/jlowin/fastmcp). It exposes 65+ API endpoints as MCP tools, allowing AI assistants to query market data directly.
+This MCP server is generated from the Theta Data OpenAPI specification using [FastMCP](https://github.com/jlowin/fastmcp). It exposes API endpoints as MCP tools, allowing AI assistants to query market data directly.
 
 The official OpenAPI specification is available at: https://docs.thetadata.us/openapiv3.yaml
 
@@ -141,8 +141,6 @@ The `generate_endpoint_docs.py` script reads the `x-min-subscription` field from
 - `endpoints_value.md` - Free + Value tier endpoints
 - `endpoints_standard.md` - Free + Value + Standard tier endpoints
 - `endpoints_professional.md` - All endpoints
-
-Categories are ordered: **Stock → Option → Index → Calendar**
 
 ## License
 
