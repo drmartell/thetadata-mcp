@@ -55,23 +55,37 @@ uv run server.py --timeout 60.0
 | `THETADATA_BASE_URL` | Theta Data API base URL | `http://127.0.0.1:25503/v3` |
 | `THETADATA_TIMEOUT` | Request timeout in seconds | `30.0` |
 
-### Claude Desktop Configuration
+### MCP Client Configuration
 
-Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
+Add the following to your MCP client config, replacing `/path/to/thetadata-mcp` with the actual path to this repository:
 
 ```json
 {
   "mcpServers": {
     "thetadata": {
-      "command": "python",
-      "args": ["/path/to/thetadata-mcp/server.py"],
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/thetadata-mcp",
+        "run",
+        "server.py"
+      ],
       "env": {
-        "THETADATA_BASE_URL": "http://127.0.0.1:25503/v3"
+        "THETADATA_BASE_URL": "http://127.0.0.1:25503/v3",
+        "THETADATA_TIMEOUT": "30.0"
       }
     }
   }
 }
 ```
+
+Config file locations by client:
+
+| Client | Config File |
+|--------|-------------|
+| Claude Desktop | `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) |
+| Windsurf | `~/.codeium/windsurf/mcp_config.json` |
+| Claude Code | `~/.claude.json` or project `.mcp.json` |
 
 ## Available Tools
 
@@ -112,7 +126,7 @@ See the [Theta Data API documentation](https://www.thetadata.net/) for full deta
 
 ## Example Queries
 
-Once connected to Claude Desktop, you can ask:
+Once connected to an MCP client, you can ask:
 
 - "List all available stock symbols"
 - "Get the current OHLC data for AAPL"
