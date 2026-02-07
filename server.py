@@ -55,6 +55,63 @@ def create_mcp_server(
         timeout=timeout,
     )
 
+    # Wrap the client's transport to transform date parameters
+    original_transport = client._transport
+    
+    class DateTransformTransport:
+        def __init__(self, transport):
+            self._transport = transport
+        
+        async def handle_async_request(self, request: httpx.Request) -> httpx.Response:
+            import datetime
+            from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
+            
+            # Parse the full URL
+            parsed = urlparse(str(request.url))
+            params = parse_qs(parsed.query, keep_blank_values=True)
+            # Convert from lists to single values
+            params = {k: v[0] if len(v) == 1 else v for k, v in params.items()}
+            
+            # If no dates provided, default to yesterday (YYYY-MM-DD format)
+            yesterday = (datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+            has_start = "start_date" in params
+            has_end = "end_date" in params
+            
+            modified = False
+            
+            if not has_start and not has_end:
+                # No dates provided - use yesterday for both start and end
+                params["start_date"] = yesterday
+                params["end_date"] = yesterday
+                modified = True
+            elif has_start and not has_end:
+                # Only start_date - use it for end_date too
+                params["end_date"] = params["start_date"]
+                modified = True
+            elif has_end and not has_start:
+                # Only end_date - use it for start_date too
+                params["start_date"] = params["end_date"]
+                modified = True
+            # If both provided, keep as-is (allows multi-day queries)
+            
+            # Rebuild URL with modified params
+            if modified:
+                new_query = urlencode(params)
+                new_parts = parsed._replace(query=new_query)
+                new_url = urlunparse(new_parts)
+                
+                # Create new request with modified URL
+                request = httpx.Request(
+                    method=request.method,
+                    url=new_url,
+                    headers=dict(request.headers),
+                    content=request.content,
+                )
+            
+            return await self._transport.handle_async_request(request)
+    
+    client._transport = DateTransformTransport(original_transport)
+
     # Load the OpenAPI specification
     openapi_spec = load_openapi_spec()
 
