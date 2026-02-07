@@ -14,11 +14,11 @@ import httpx
 import yaml
 from fastmcp import FastMCP
 from fastmcp.server.openapi import (
-    HTTPRoute,
     OpenAPITool,
     OpenAPIResource,
     OpenAPIResourceTemplate,
 )
+from fastmcp.server.openapi.routing import HTTPRoute
 
 from subscription import extract_tier_from_spec, get_tier_tag
 
