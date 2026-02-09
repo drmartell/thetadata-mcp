@@ -6536,8 +6536,8 @@ components:
       description: The year to fetch data for.
       required: true
       schema:
-        type: string
-        format: date
+        type: integer
+        example: 2025
 
     time_of_day:
       name: time_of_day
