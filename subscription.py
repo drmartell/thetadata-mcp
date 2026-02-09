@@ -3,10 +3,8 @@
 Extracts subscription tier information from the OpenAPI spec's x-min-subscription field.
 """
 
-from typing import Optional
 
-
-def extract_tier_from_spec(openapi_spec: dict, path: str) -> Optional[str]:
+def extract_tier_from_spec(openapi_spec: dict, path: str) -> str | None:
     """Extract the minimum subscription tier for an endpoint from the OpenAPI spec.
 
     Args:
@@ -34,7 +32,7 @@ def extract_tier_from_spec(openapi_spec: dict, path: str) -> Optional[str]:
     return None
 
 
-def get_tier_tag(tier: Optional[str]) -> str:
+def get_tier_tag(tier: str | None) -> str:
     """Get the tag string for a subscription tier.
 
     Args:

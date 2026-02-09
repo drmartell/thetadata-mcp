@@ -15,7 +15,7 @@ import yaml
 
 def load_openapi_spec(spec_path: Path) -> dict:
     """Load the OpenAPI spec from YAML file."""
-    with open(spec_path, "r") as f:
+    with open(spec_path) as f:
         return yaml.safe_load(f)
 
 

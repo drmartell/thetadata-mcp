@@ -144,36 +144,177 @@ def create_mcp_server(
     # Load the OpenAPI specification
     openapi_spec = load_openapi_spec()
 
+    # Concise, LLM-optimized descriptions keyed by operationId
+    short_descriptions: dict[str, str] = {
+        # Stock - List
+        "stock_list_symbols": "List all traded stock symbols. Updated overnight.",
+        "stock_list_dates": "List available data dates for a stock by request type and symbol.",
+        # Stock - Snapshot (real-time current day)
+        "stock_snapshot_ohlc": "Real-time current-day OHLC for a stock.",
+        "stock_snapshot_trade": "Real-time last trade for a stock.",
+        "stock_snapshot_quote": "Real-time last BBO/NBBO quote for a stock.",
+        "stock_snapshot_market_value": (
+            "Real-time market value derived from last quote for a stock."
+        ),
+        # Stock - History
+        "stock_history_eod": "End-of-day report for a stock. Generated at 17:15 ET daily.",
+        "stock_history_ohlc": "Historical OHLC bars for a stock. Max 1 month per request.",
+        "stock_history_trade": "Tick-level trade history for a stock. Max 1 month per request.",
+        "stock_history_quote": (
+            "NBBO quote history for a stock. Supports interval aggregation. "
+            "Max 1 month per request."
+        ),
+        "stock_history_trade_quote": (
+            "Trade history paired with contemporaneous BBO quotes. Max 1 month per request."
+        ),
+        # Stock - At Time
+        "stock_at_time_trade": "Last trade at a specific time of day for a stock.",
+        "stock_at_time_quote": "Last quote at a specific time of day for a stock.",
+        # Option - List
+        "option_list_symbols": "List all traded option underlying symbols. Updated overnight.",
+        "option_list_dates": (
+            "List available data dates for an option by symbol, request type, and expiration."
+        ),
+        "option_list_expirations": (
+            "List available expiration dates for an option symbol. Updated overnight."
+        ),
+        "option_list_strikes": (
+            "List available strikes for an option symbol and expiration. Updated overnight."
+        ),
+        "option_list_contracts": (
+            "List contracts traded or quoted on a date. Supports symbol filtering. Real-time."
+        ),
+        # Option - Snapshot (real-time current day)
+        "option_snapshot_ohlc": "Real-time current-day OHLC for an option contract.",
+        "option_snapshot_trade": "Real-time last trade for an option contract.",
+        "option_snapshot_quote": "Real-time last NBBO quote for an option contract.",
+        "option_snapshot_open_interest": (
+            "Last open interest for an option contract. Reported ~06:30 ET daily."
+        ),
+        "option_snapshot_market_value": (
+            "Real-time market value from last NBBO quote for an option contract."
+        ),
+        "option_snapshot_greeks_implied_volatility": (
+            "Real-time implied volatility from bid, mid, and ask prices."
+        ),
+        "option_snapshot_greeks_all": (
+            "Real-time greeks for all contracts on an expiration. Use expiration=* for all."
+        ),
+        "option_snapshot_greeks_first_order": (
+            "Real-time first-order greeks (delta, gamma, theta, vega, rho) "
+            "for all contracts on an expiration."
+        ),
+        "option_snapshot_greeks_second_order": (
+            "Real-time second-order greeks for all contracts on an expiration."
+        ),
+        "option_snapshot_greeks_third_order": (
+            "Real-time third-order greeks for all contracts on an expiration."
+        ),
+        # Option - History
+        "option_history_eod": "End-of-day report for options. Generated at 17:15 ET daily.",
+        "option_history_ohlc": "Historical OHLC bars for options. Max 1 month per request.",
+        "option_history_trade": (
+            "Tick-level trade history for options. Max 1 month, requires expiration."
+        ),
+        "option_history_quote": (
+            "NBBO quote history for options. Supports interval aggregation. "
+            "Max 1 month, requires expiration."
+        ),
+        "option_history_trade_quote": (
+            "Trade history paired with contemporaneous NBBO quotes for options. "
+            "Max 1 month, requires expiration."
+        ),
+        "option_history_open_interest": (
+            "Historical open interest for options. Reported ~06:30 ET, reflects prior day."
+        ),
+        "option_history_greeks_eod": (
+            "EOD greeks for all contracts by symbol and expiration. Use expiration=* for all."
+        ),
+        "option_history_greeks_all": (
+            "Historical greeks (all orders) from midpoint prices. Max 1 month per request."
+        ),
+        "option_history_trade_greeks_all": (
+            "Greeks calculated at each trade. Max 1 month, requires expiration."
+        ),
+        "option_history_greeks_first_order": (
+            "Historical first-order greeks from midpoint prices. Max 1 month per request."
+        ),
+        "option_history_trade_greeks_first_order": (
+            "First-order greeks at each trade. Max 1 month, requires expiration."
+        ),
+        "option_history_greeks_second_order": (
+            "Historical second-order greeks from midpoint prices. Max 1 month per request."
+        ),
+        "option_history_trade_greeks_second_order": (
+            "Second-order greeks at each trade. Max 1 month, requires expiration."
+        ),
+        "option_history_greeks_third_order": (
+            "Historical third-order greeks from midpoint prices. Max 1 month per request."
+        ),
+        "option_history_trade_greeks_third_order": (
+            "Third-order greeks at each trade. Max 1 month, requires expiration."
+        ),
+        "option_history_greeks_implied_volatility": (
+            "Historical IV from bid, mid, and ask prices. Max 1 month per request."
+        ),
+        "option_history_trade_greeks_implied_volatility": (
+            "IV calculated at each trade. Max 1 month, requires expiration."
+        ),
+        # Option - At Time
+        "option_at_time_trade": "Last option trade at a specific time of day.",
+        "option_at_time_quote": "Last option NBBO quote at a specific time of day.",
+        # Index - List
+        "index_list_symbols": "List all index symbols. Updated overnight.",
+        "index_list_dates": "List available data dates for an index by request type and symbol.",
+        # Index - Snapshot
+        "index_snapshot_ohlc": "Real-time current-day OHLC for an index.",
+        "index_snapshot_price": "Real-time last price for an index.",
+        "index_snapshot_market_value": "Real-time market value for an index.",
+        # Index - History
+        "index_history_eod": "End-of-day report for an index. Generated at 17:15 ET daily.",
+        "index_history_ohlc": "Historical OHLC bars for an index.",
+        "index_history_price": "Historical price reports for an index. Max 1 month per request.",
+        # Index - At Time
+        "index_at_time_price": "Index price at a specific time of day.",
+        # Calendar
+        "calendar_open_today": "Current day equity market schedule.",
+        "calendar_on_date": "Equity market schedule for a given date.",
+        "calendar_year": "Equity market holidays for a given year.",
+    }
+
     # Define component customization function to add subscription tier tags
     def customize_components(
         route: HTTPRoute,
         component: OpenAPITool | OpenAPIResource | OpenAPIResourceTemplate,
     ) -> None:
-        """Add subscription tier tags to MCP components and override default format."""
+        """Add subscription tier tags, concise descriptions, and override default format."""
         tier = extract_tier_from_spec(openapi_spec, route.path)
         tag = get_tier_tag(tier)
         component.tags.add(tag)
 
-        # Also append tier info to description for visibility
+        # Replace verbose OpenAPI descriptions with concise LLM-optimized ones
+        op_id = component.name
+        if op_id in short_descriptions:
+            desc = short_descriptions[op_id]
+        else:
+            desc = component.description or ""
         if tier:
-            component.description = f"[{tier.upper()}] {component.description}"
+            component.description = f"[{tier.upper()}] {desc}"
+        else:
+            component.description = desc
 
-        # Override default format from 'csv' to 'json' for better AI compatibility
+        # Strip output_schema to reduce tools/list payload size (~85KB savings)
+        if isinstance(component, OpenAPITool):
+            component.output_schema = None
+
+        # Remove 'format' param from schemas — transport layer forces json_new
         if isinstance(component, OpenAPITool) and component.parameters:
-            # Handle both dict and Pydantic model structures
             params = component.parameters
             if isinstance(params, dict):
-                # Parameters is a dict
-                if "properties" in params and "format" in params["properties"]:
-                    format_prop = params["properties"]["format"]
-                    if isinstance(format_prop, dict) and format_prop.get("default") == "csv":
-                        format_prop["default"] = "json"
-            elif hasattr(params, "properties"):
-                # Parameters is a Pydantic model-like object
-                for param_name, param_info in params.properties.items():
-                    if param_name == "format" and hasattr(param_info, "default"):
-                        if param_info.default == "csv":
-                            param_info.default = "json"
+                if "properties" in params:
+                    params["properties"].pop("format", None)
+                if "required" in params and "format" in params["required"]:
+                    params["required"].remove("format")
 
     # Create the MCP server from the OpenAPI spec
     mcp = FastMCP.from_openapi(
@@ -182,9 +323,7 @@ def create_mcp_server(
         name="Theta Data MCP Server",
         mcp_component_fn=customize_components,
         route_maps=[
-            # Map GET requests to RESOURCES so they appear in list resources
-            RouteMap(methods=["GET"], mcp_type=MCPType.RESOURCE),
-            # All other methods become TOOLS
+            # All endpoints become tools for broad MCP client compatibility
             RouteMap(mcp_type=MCPType.TOOL),
         ],
     )
